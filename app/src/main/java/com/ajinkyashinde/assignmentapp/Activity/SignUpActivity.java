@@ -177,6 +177,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         Toast.makeText(this, "User Registered successfully", Toast.LENGTH_SHORT).show();
 
         startActivity(new Intent(SignUpActivity.this,LoginActivity.class));
+        finish();
 
     }
 

@@ -7,6 +7,7 @@ package com.ajinkyashinde.assignmentapp.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -14,6 +15,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.room.Room;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -111,13 +113,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logOut() {
-        SharedPreferences sharedPreferences = getSharedPreferences("Login",MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
-        editor.commit();
-        Toast.makeText(this, "LogOut Successfully", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(MainActivity.this,WelcomeActivity.class));
-        finish();
+
+        new AlertDialog.Builder(this)
+                .setIcon(R.mipmap.ic_launcher)
+                .setTitle("Assignment App")
+                .setMessage("Are you sure to logout ?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferences sharedPreferences = getSharedPreferences("Login",MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.clear();
+                        editor.commit();
+                        Toast.makeText(getApplicationContext(), "LogOut Successfully", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(MainActivity.this,WelcomeActivity.class));
+                        finish();
+                        moveTaskToBack(true);
+                    }
+
+                })
+                .setNegativeButton("No", null)
+                .show();
+
+
     }
 
 
