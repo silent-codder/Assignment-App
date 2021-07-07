@@ -30,6 +30,12 @@ android {
 
 dependencies {
 
+    // Lib for google services
+    implementation 'com.google.android.gms:play-services-maps:17.0.1'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+
+    // Lib for MAterial design
+
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
@@ -38,14 +44,17 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    // lib for image cropping
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
+    // Room database
     implementation "android.arch.persistence.room:runtime:1.1.1"
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
 
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'com.google.android.gms:play-services-maps:17.0.1'
-    implementation 'com.google.android.gms:play-services-location:17.0.0'
+
+    // Lib for View local db in browser
+    implementation 'com.amitshekhar.android:debug-db:1.0.6'
 }

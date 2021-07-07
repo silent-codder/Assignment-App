@@ -7,6 +7,10 @@
         android:checked="true"
         android:icon="@drawable/ic_baseline_home_24"
         tools:ignore="HardcodedText" />
+    <item android:id="@+id/list"
+        android:title="All User List"
+        android:icon="@drawable/ic_baseline_list_24"
+        tools:ignore="HardcodedText" />
     <item android:id="@+id/map"
         android:title="User Location"
         android:icon="@drawable/ic_baseline_location_on_24"

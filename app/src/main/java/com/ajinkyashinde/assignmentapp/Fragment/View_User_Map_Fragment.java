@@ -9,18 +9,13 @@ package com.ajinkyashinde.assignmentapp.Fragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.room.Room;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ajinkyashinde.assignmentapp.R;
-import com.ajinkyashinde.assignmentapp.Room.DAO;
-import com.ajinkyashinde.assignmentapp.Room.UserData;
-import com.ajinkyashinde.assignmentapp.Room.UserDataBase;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -28,12 +23,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import static android.content.Context.MODE_PRIVATE;
+public class View_User_Map_Fragment extends Fragment {
 
-public class MapsFragment extends Fragment {
-
-    UserDataBase userDataBase;
-
+    String Lat,Log,FullName;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -48,30 +40,28 @@ public class MapsFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-
-            setUpDB();
-            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Login",MODE_PRIVATE);
-            final DAO dao = userDataBase.dao();
-            UserData userData = dao.login(sharedPreferences.getString("username",null),sharedPreferences.getString("password",null));
-            Double latitude = Double.valueOf(userData.getLat());
-            Double longitude = Double.valueOf(userData.getLog());
+            Double latitude = Double.valueOf(Lat);
+            Double longitude = Double.valueOf(Log);
             LatLng latLng = new LatLng(latitude, longitude);
-            googleMap.addMarker(new MarkerOptions().position(latLng).title(userData.getFirstName() + " " +userData.getLastName()));
+            googleMap.addMarker(new MarkerOptions().position(latLng).title(FullName));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         }
     };
-
-    private void setUpDB() {
-        userDataBase = Room.databaseBuilder(getContext(), UserDataBase.class,"userDB")
-                .allowMainThreadQueries().build();
-    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_maps, container, false);
+        View view = inflater.inflate(R.layout.fragment_view_user_map, container, false);
+        Bundle bundle = this.getArguments();
+        if (bundle!=null){
+            Lat = bundle.getString("Lat");
+            Log = bundle.getString("Log");
+            FullName = bundle.getString("FullName");
+        }
+
+        return view;
     }
 
     @Override

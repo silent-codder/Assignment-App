@@ -1,4 +1,10 @@
-package com.ajinkyashinde.assignmentapp;
+package com.ajinkyashinde.assignmentapp.Activity;
+
+/**
+ Developed BY: Ajinkya Shinde
+ Designation: Android Learner
+ Date: 06/07/2021
+ **/
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +12,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+
+import com.ajinkyashinde.assignmentapp.R;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -20,6 +28,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 startActivity(new Intent(WelcomeActivity.this,LoginActivity.class));
             }
         });
+
         findViewById(R.id.btnSignUp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -31,6 +40,7 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        //Check login details
         SharedPreferences sharedPreferences = getSharedPreferences("Login",MODE_PRIVATE);
         if (sharedPreferences.getBoolean("loggedIn",false)){
             startActivity(new Intent(WelcomeActivity.this,MainActivity.class));

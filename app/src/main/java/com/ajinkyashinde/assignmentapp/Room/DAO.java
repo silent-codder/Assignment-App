@@ -1,5 +1,11 @@
 package com.ajinkyashinde.assignmentapp.Room;
 
+/**
+ Developed BY: Ajinkya Shinde
+ Designation: Android Learner
+ Date: 06/07/2021
+ **/
+
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;

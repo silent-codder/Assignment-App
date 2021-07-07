@@ -1,10 +1,14 @@
-package com.ajinkyashinde.assignmentapp;
+package com.ajinkyashinde.assignmentapp.Activity;
+
+/**
+ Developed BY: Ajinkya Shinde
+ Designation: Android Learner
+ Date: 06/07/2021
+ **/
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.room.Room;
 
@@ -12,33 +16,30 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.media.audiofx.BassBoost;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Looper;
 import android.provider.Settings;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ajinkyashinde.assignmentapp.R;
 import com.ajinkyashinde.assignmentapp.Room.UserData;
 import com.ajinkyashinde.assignmentapp.Room.UserDataBase;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -47,14 +48,12 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
-import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -67,26 +66,17 @@ import static android.content.ContentValues.TAG;
 
 public class SignUpActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-
     EditText mFirstName, mLastName, mUserName, mPassword, mQuestionAnswer,mAddressLine;
     TextView mBirthDate;
     Calendar calendar;
     CircleImageView mProfileImg;
     Spinner mQuestionSpinner;
     int day, month, year;
-    String lat,log;
-    String Que, DOB = null;
+    String lat,log,Que,ImgSize;
     Button mBtnSubmit;
     Uri profileImgUri = null;
     UserDataBase userDataBase;
-
     String[] Questions = {"What is your favorite pet name?", "What is your birth place?", "Who is your favorite actor?"};
-
-    private static final Pattern PASSWORD_PATTERN =
-            Pattern.compile(
-                    "(?=.*[A-Z])"         //at least 1 upper case letter
-            );
-
     FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
@@ -110,7 +100,9 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         month = calendar.get(Calendar.MONTH);
         year = calendar.get(Calendar.YEAR);
 
+        //Initialize room database
         setUpDB();
+
 
         mBirthDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,7 +123,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
 
         mQuestionSpinner.setOnItemSelectedListener(this);
 
-        //Creating the ArrayAdapter instance having the question list
+        //Creating an ArrayAdapter instance for having the questions list
         ArrayAdapter questions = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Questions);
         questions.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mQuestionSpinner.setAdapter(questions);
@@ -140,19 +132,23 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
             @Override
             public void onClick(View v) {
                 if (validateFirstName() && validateLastName() && validateDOB() && validateUsername()
-                && validatePassword() && validateAnswer() && validateProfileUri() && validateAddress()) {
-
+                && validatePassword() && validateAnswer() && validateProfileUri() && validateAddress()
+                && ImgSizeCheck()) {
+                    // Save data into the local db
                     SaveData();
 
                 }
+
             }
         });
 
 
-        //Select profile img
+        //Select profile image
         mProfileImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //upload image after cropping and compression
                 UploadImg();
             }
         });
@@ -178,15 +174,9 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         UserData userData = new UserData(firstName,lastName,userName,password,DOB,address,lat,log,Que,answer,ProfileUrl);
         userDataBase.dao().userInfo(userData);
 
-        Toast.makeText(this, "Register successfully", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "User Registered successfully", Toast.LENGTH_SHORT).show();
 
         startActivity(new Intent(SignUpActivity.this,LoginActivity.class));
-
-        List<UserData> data = userDataBase.dao().getUserData();
-
-        for (int i=0;i<data.size();i++){
-            Log.d(TAG, "Users : " + data.get(i).getUserName() + data.get(i).getPassword());
-        }
 
     }
 
@@ -264,7 +254,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
     private boolean validateFirstName() {
         String firstName = mFirstName.getText().toString().trim();
         if (firstName.isEmpty()) {
-            mFirstName.setError("Field can't be empty");
+            mFirstName.setError("First Name should not be empty");
             return false;
         } else {
             mFirstName.setError(null);
@@ -276,7 +266,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
     private boolean validateLastName() {
         String lastName = mLastName.getText().toString().trim();
         if (lastName.isEmpty()) {
-            mLastName.setError("Field can't be empty");
+            mLastName.setError("Last Name should not be empty");
             return false;
         } else {
             mLastName.setError(null);
@@ -288,10 +278,10 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
     private boolean validateUsername() {
         String userName = mUserName.getText().toString().trim();
         if (userName.isEmpty()) {
-            mUserName.setError("Field can't be empty");
+            mUserName.setError("User Name should not be empty");
             return false;
         } else if (userName.length() > 15) {
-            mUserName.setError("Username too long");
+            mUserName.setError("Username is too long, It should not be more than 15 Charactor");
             return false;
         } else {
             mUserName.setError(null);
@@ -301,21 +291,33 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
     private boolean validatePassword() {
         String password = mPassword.getText().toString().trim();
         if (password.isEmpty()) {
-            mPassword.setError("Field can't be empty");
+            mPassword.setError("Password should not be empty");
             return false;
-        } else if (password.length()<8) {
+        }else if (password.length()<8){
             mPassword.setError("Password must be 8 digit long");
+            validatePassword(password);
             return false;
-        } else {
+        }else if (!validatePassword(password)){
+            mPassword.setError("Password should contain at least one capital letter");
+            return false;
+        }else {
             mPassword.setError(null);
             return true;
         }
     }
 
+    public boolean validatePassword(String password){
+        Pattern pattern;
+        Matcher matcher;
+        final String PASSWORD_PATTERN = "(?=.*[A-Z]).{2,}";
+        pattern = Pattern.compile(PASSWORD_PATTERN);
+        matcher = pattern.matcher(password);
+        return matcher.matches();
+    }
     private boolean validateDOB() {
         String DOB = mBirthDate.getText().toString().trim();
         if (DOB.isEmpty()) {
-            mBirthDate.setError("Select Birth Date");
+            mBirthDate.setError("Select Date of Birth");
             return false;
         } else {
             mBirthDate.setError(null);
@@ -327,7 +329,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
     private boolean validateAnswer() {
         String answer = mQuestionAnswer.getText().toString().trim();
         if (answer.isEmpty()) {
-            mQuestionAnswer.setError("Field can't be empty");
+            mQuestionAnswer.setError("Answer should not be empty");
             return false;
         } else {
             mQuestionAnswer.setError(null);
@@ -337,9 +339,8 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     private boolean validateProfileUri() {
-        String ImgUrl = String.valueOf(profileImgUri);
-        if (ImgUrl.isEmpty()) {
-            Toast toast = Toast.makeText(this, "Profile Image select", Toast.LENGTH_SHORT);
+        if (profileImgUri==null) {
+            Toast toast = Toast.makeText(this, "Select Profile Image", Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER,0,0);
             toast.show();
             return false;
@@ -352,10 +353,21 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
     private boolean validateAddress() {
         String address = mAddressLine.getText().toString().trim();
         if (address.isEmpty()) {
-            mAddressLine.setError("Field can't be empty");
+            mAddressLine.setError("Address should not be empty");
             return false;
         } else {
             mAddressLine.setError(null);
+            return true;
+        }
+
+    }
+
+    private boolean ImgSizeCheck() {
+        long size = Long.parseLong(ImgSize);
+        if (size > 1024) {
+            Toast.makeText(this, "Image should not be more than 1 MB in size", Toast.LENGTH_SHORT).show();
+            return false;
+        } else {
             return true;
         }
 
@@ -388,12 +400,10 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
             if (resultCode == RESULT_OK) {
                 profileImgUri = result.getUri();
                 mProfileImg.setImageURI(profileImgUri);
-                Log.d(TAG, "Img url: " + profileImgUri);
 
-                File file = new File(String.valueOf(profileImgUri));
-                long length = file.length();
-                length = length/1024;
-                Log.d(TAG, "File Path : " + file.getPath() + ", File size : " + length +" KB");
+                // get file size
+                calculateFileSize(profileImgUri);
+
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
@@ -401,5 +411,19 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
             }
 
         }
+    }
+    public String calculateFileSize(Uri filepath)
+    {
+        File file = new File(filepath.getPath());
+
+        // Get length of file in bytes
+        long fileSizeInBytes = file.length();
+
+        // Convert the bytes to Kilobytes (1 KB = 1024 Bytes)
+        long fileSizeInKB = fileSizeInBytes / 1024;
+
+        ImgSize =Long.toString(fileSizeInKB);
+        Toast.makeText(this, "Image Size is: " + ImgSize + " KB", Toast.LENGTH_SHORT).show();
+        return ImgSize;
     }
 }

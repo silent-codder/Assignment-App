@@ -1,4 +1,9 @@
 package com.ajinkyashinde.assignmentapp.Room;
+/**
+ Developed BY: Ajinkya Shinde
+ Designation: Android Learner
+ Date: 06/07/2021
+ **/
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -37,21 +42,6 @@ public class UserData {
         ProfileUrl = profileUrl;
     }
 
-    public String getProfileUrl() {
-        return ProfileUrl;
-    }
-
-    public void setProfileUrl(String profileUrl) {
-        ProfileUrl = profileUrl;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -131,5 +121,13 @@ public class UserData {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public String getProfileUrl() {
+        return ProfileUrl;
+    }
+
+    public void setProfileUrl(String profileUrl) {
+        ProfileUrl = profileUrl;
     }
 }

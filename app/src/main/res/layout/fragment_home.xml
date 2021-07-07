@@ -8,6 +8,7 @@
     tools:context=".Fragment.HomeFragment">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -47,8 +48,8 @@
                     android:id="@+id/userProfileImg"/>
                 <ImageView
                     android:id="@+id/editProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:src="@drawable/ic_baseline_photo_camera_24"
                     android:layout_toRightOf="@id/userProfileImg"
                     android:layout_below="@id/userProfileImg"

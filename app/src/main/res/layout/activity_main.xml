@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:openDrawer="start"
     android:id="@+id/drawer"
-    tools:context=".MainActivity">
+    tools:context=".Activity.MainActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -1,4 +1,9 @@
-package com.ajinkyashinde.assignmentapp;
+package com.ajinkyashinde.assignmentapp.Activity;
+/**
+ Developed BY: Ajinkya Shinde
+ Designation: Android Learner
+ Date: 06/07/2021
+ **/
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -18,7 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ajinkyashinde.assignmentapp.Fragment.HomeFragment;
+import com.ajinkyashinde.assignmentapp.Fragment.ListFragment;
 import com.ajinkyashinde.assignmentapp.Fragment.MapsFragment;
+import com.ajinkyashinde.assignmentapp.R;
 import com.ajinkyashinde.assignmentapp.Room.DAO;
 import com.ajinkyashinde.assignmentapp.Room.UserData;
 import com.ajinkyashinde.assignmentapp.Room.UserDataBase;
@@ -48,14 +55,13 @@ public class MainActivity extends AppCompatActivity {
         toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.Open,R.string.Close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        nav.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fetchData();
-            }
-        });
+
+        // Initialize Database
         setUpDB();
+
+        // get data from local db
         fetchData();
+
         nav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -67,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.home :
                         selectFragment = new HomeFragment();
+                        break;
+                    case R.id.list :
+                        selectFragment = new ListFragment();
                         break;
                     case R.id.map :
                         selectFragment = new MapsFragment();
@@ -87,11 +96,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     private void fetchData() {
         SharedPreferences sharedPreferences = getSharedPreferences("Login",MODE_PRIVATE);
         final DAO dao = userDataBase.dao();
         UserData userData = dao.login(sharedPreferences.getString("username",null),sharedPreferences.getString("password",null));
-        UserName = userData.getUserName();
+        UserName = userData.getFirstName() + " " + userData.getLastName();
         ProfileUrl = userData.getProfileUrl();
         View view = nav.inflateHeaderView(R.layout.header_layout);
         CircleImageView profile = view.findViewById(R.id.userProfileImg);

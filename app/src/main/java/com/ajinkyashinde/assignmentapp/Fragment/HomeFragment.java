@@ -1,5 +1,11 @@
 package com.ajinkyashinde.assignmentapp.Fragment;
 
+/**
+ Developed BY: Ajinkya Shinde
+ Designation: Android Learner
+ Date: 06/07/2021
+ **/
+
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -9,9 +15,10 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,18 +30,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ajinkyashinde.assignmentapp.Adapter.UserListAdapter;
 import com.ajinkyashinde.assignmentapp.R;
 import com.ajinkyashinde.assignmentapp.Room.DAO;
 import com.ajinkyashinde.assignmentapp.Room.UserData;
 import com.ajinkyashinde.assignmentapp.Room.UserDataBase;
-import com.ajinkyashinde.assignmentapp.SignUpActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -50,7 +59,6 @@ public class HomeFragment extends Fragment {
     Calendar calendar;
     ImageView mBtnEditProfile;
     SharedPreferences sharedPreferences;
-    String DOB;
     int day,month,year;
     Uri profileImgUri;
 
@@ -75,8 +83,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // Initialize Database
         setUpDB();
 
+        // Get user data
         fetchData();
 
         view.findViewById(R.id.btnUpdateProfile).setOnClickListener(new View.OnClickListener() {
@@ -85,9 +95,11 @@ public class HomeFragment extends Fragment {
                showBottomSheet();
             }
         });
+
         return view;
     }
 
+    @SuppressLint("SetTextI18n")
     private void fetchData() {
         sharedPreferences = getActivity().getSharedPreferences("Login",MODE_PRIVATE);
         final DAO dao = userDataBase.dao();
@@ -192,10 +204,8 @@ public class HomeFragment extends Fragment {
                 mProfileImg.setImageURI(profileImgUri);
                 Log.d(TAG, "Img url: " + profileImgUri);
 
-                File file = new File(String.valueOf(profileImgUri));
-                long length = file.length();
-                length = length/1024;
-                Log.d(TAG, "File Path : " + file.getPath() + ", File size : " + length +" KB");
+                // get image size
+                calculateFileSize(profileImgUri);
                 String Url = String.valueOf(profileImgUri);
                 userDataBase.dao().updateProfile(Url,sharedPreferences.getString("password",null));
                 Toast.makeText(getContext(), "Update Profile Image", Toast.LENGTH_SHORT).show();
@@ -207,5 +217,20 @@ public class HomeFragment extends Fragment {
             }
 
         }
+    }
+
+    public String calculateFileSize(Uri filepath)
+    {
+        File file = new File(filepath.getPath());
+
+        // Get length of file in bytes
+        long fileSizeInBytes = file.length();
+
+        // Convert the bytes to Kilobytes (1 KB = 1024 Bytes)
+        double fileSizeInKB = fileSizeInBytes / 1024;
+
+        String calString=Double.toString(fileSizeInKB);
+        Toast.makeText(getContext(), "Image Size is: " + calString + " KB", Toast.LENGTH_SHORT).show();
+        return calString;
     }
 }

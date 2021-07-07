@@ -1,7 +1,11 @@
-package com.ajinkyashinde.assignmentapp;
+package com.ajinkyashinde.assignmentapp.Activity;
+/**
+    Developed BY: Ajinkya Shinde
+    Designation: Android Learner
+    Date: 06/07/2021
+ **/
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Dao;
 import androidx.room.Room;
 
 import android.content.Intent;
@@ -14,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ajinkyashinde.assignmentapp.R;
 import com.ajinkyashinde.assignmentapp.Room.DAO;
 import com.ajinkyashinde.assignmentapp.Room.UserData;
 import com.ajinkyashinde.assignmentapp.Room.UserDataBase;
@@ -35,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         mBtnLogin = findViewById(R.id.btnLogin);
         mNewUser = findViewById(R.id.newUser);
 
+        // initialize database
         setUpDB();
 
         mBtnLogin.setOnClickListener(new View.OnClickListener() {
