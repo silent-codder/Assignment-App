@@ -3,7 +3,7 @@ package com.ajinkyashinde.assignmentapp.Activity;
 /**
  Developed BY: Ajinkya Shinde
  Designation: Android Learner
- Date: 06/07/2021
+ Date: 07/08/2021
  **/
 
 import androidx.annotation.NonNull;
@@ -35,6 +35,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,11 +70,12 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
 
     EditText mFirstName, mLastName, mUserName, mPassword, mQuestionAnswer,mAddressLine;
     TextView mBirthDate;
+    RadioGroup mGender;
     Calendar calendar;
     CircleImageView mProfileImg;
     Spinner mQuestionSpinner;
     int day, month, year;
-    String lat,log,Que,ImgSize;
+    String lat,log,Que,ImgSize,GenderTxt;
     Button mBtnSubmit;
     Uri profileImgUri = null;
     UserDataBase userDataBase;
@@ -85,6 +88,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         setContentView(R.layout.activity_sign_up);
 
         mBirthDate = findViewById(R.id.birthDate);
+        mGender = findViewById(R.id.gender);
         mQuestionSpinner = findViewById(R.id.spinner);
         mFirstName = findViewById(R.id.firstName);
         mLastName = findViewById(R.id.lastName);
@@ -103,6 +107,14 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         //Initialize room database
         setUpDB();
 
+        mGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                int selectedId=group.getCheckedRadioButtonId();
+                RadioButton radioButton =(RadioButton)findViewById(selectedId);
+                GenderTxt = radioButton.getText().toString();
+            }
+        });
 
         mBirthDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,8 +182,9 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         String address = mAddressLine.getText().toString().trim();
         String ProfileUrl = String.valueOf(profileImgUri);
 
+        UserData userData = new UserData(firstName,lastName,userName,password,DOB,address,lat,log,Que,GenderTxt,answer,ProfileUrl);
 
-        UserData userData = new UserData(firstName,lastName,userName,password,DOB,address,lat,log,Que,answer,ProfileUrl);
+//        UserData userData = new UserData(firstName,lastName,userName,password,DOB,GenderTxt,address,lat,log,Que,answer,ProfileUrl);
         userDataBase.dao().userInfo(userData);
 
         Toast.makeText(this, "User Registered successfully", Toast.LENGTH_SHORT).show();
@@ -252,6 +265,8 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         }
     }
 
+
+
     private boolean validateFirstName() {
         String firstName = mFirstName.getText().toString().trim();
         if (firstName.isEmpty()) {
@@ -289,6 +304,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
             return true;
         }
     }
+
     private boolean validatePassword() {
         String password = mPassword.getText().toString().trim();
         if (password.isEmpty()) {
@@ -315,6 +331,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         matcher = pattern.matcher(password);
         return matcher.matches();
     }
+
     private boolean validateDOB() {
         String DOB = mBirthDate.getText().toString().trim();
         if (DOB.isEmpty()) {
@@ -413,6 +430,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
 
         }
     }
+
     public String calculateFileSize(Uri filepath)
     {
         File file = new File(filepath.getPath());

@@ -2,7 +2,7 @@ package com.ajinkyashinde.assignmentapp.Room;
 /**
  Developed BY: Ajinkya Shinde
  Designation: Android Learner
- Date: 06/07/2021
+ Date: 07/08/2021
  **/
 
 import androidx.room.Entity;
@@ -22,13 +22,15 @@ public class UserData {
     String lat;
     String log;
     String question;
+    String gender;
     String answer;
     String ProfileUrl;
 
     public UserData() {
     }
 
-    public UserData(String firstName, String lastName, String userName, String password, String birthDate, String address, String lat, String log, String question, String answer, String profileUrl) {
+    public UserData(String firstName, String lastName, String userName, String password, String birthDate, String address, String lat, String log, String question, String gender, String answer, String profileUrl) {
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
@@ -38,10 +40,18 @@ public class UserData {
         this.lat = lat;
         this.log = log;
         this.question = question;
+        this.gender = gender;
         this.answer = answer;
         ProfileUrl = profileUrl;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -113,6 +123,14 @@ public class UserData {
 
     public void setQuestion(String question) {
         this.question = question;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getAnswer() {

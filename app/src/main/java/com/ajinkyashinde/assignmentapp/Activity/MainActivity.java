@@ -2,7 +2,7 @@ package com.ajinkyashinde.assignmentapp.Activity;
 /**
  Developed BY: Ajinkya Shinde
  Designation: Android Learner
- Date: 06/07/2021
+ Date: 07/08/2021
  **/
 
 import androidx.annotation.NonNull;
@@ -31,6 +31,8 @@ import com.ajinkyashinde.assignmentapp.R;
 import com.ajinkyashinde.assignmentapp.Room.DAO;
 import com.ajinkyashinde.assignmentapp.Room.UserData;
 import com.ajinkyashinde.assignmentapp.Room.UserDataBase;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.navigation.NavigationView;
 import com.squareup.picasso.Picasso;
 
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     Fragment selectFragment;
     String UserName,ProfileUrl;
     UserDataBase userDataBase;
+
+    FusedLocationProviderClient fusedLocationProviderClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
         toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.Open,R.string.Close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
+        //Initialize fusedLocationProviderClient
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         // Initialize Database
         setUpDB();
@@ -129,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "LogOut Successfully", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(MainActivity.this,WelcomeActivity.class));
                         finish();
-                        moveTaskToBack(true);
                     }
 
                 })

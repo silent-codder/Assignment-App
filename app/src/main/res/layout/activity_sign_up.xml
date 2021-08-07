@@ -101,13 +101,50 @@
                 android:inputType="textCapWords"
                 tools:ignore="HardcodedText,TextFields" />
 
+            <TextView
+                android:id="@+id/genderTxt"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/birthDate"
+                android:text="Gender"/>
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/gender"
+                android:layout_marginLeft="20dp"
+                android:layout_below="@id/genderTxt"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Male"
+                    android:id="@+id/male"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Female"
+                    android:id="@+id/female"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Other"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/other"/>
+
+            </RadioGroup>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/userNameLayout"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:layout_below="@id/birthDate"
+                android:layout_below="@id/gender"
                 android:layout_marginTop="10dp"
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
 

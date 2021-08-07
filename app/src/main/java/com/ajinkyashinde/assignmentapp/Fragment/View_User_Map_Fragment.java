@@ -3,7 +3,7 @@ package com.ajinkyashinde.assignmentapp.Fragment;
 /**
  Developed BY: Ajinkya Shinde
  Designation: Android Learner
- Date: 06/07/2021
+ Date: 07/08/2021
  **/
 
 import androidx.annotation.NonNull;
@@ -11,9 +11,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.ajinkyashinde.assignmentapp.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -40,11 +42,21 @@ public class View_User_Map_Fragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            Double latitude = Double.valueOf(Lat);
-            Double longitude = Double.valueOf(Log);
-            LatLng latLng = new LatLng(latitude, longitude);
-            googleMap.addMarker(new MarkerOptions().position(latLng).title(FullName));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+            if (!TextUtils.isEmpty(Lat)){
+                Double latitude = Double.valueOf(Lat);
+                Double longitude = Double.valueOf(Log);
+                LatLng latLng = new LatLng(latitude, longitude);
+                googleMap.addMarker(new MarkerOptions().position(latLng).title(FullName));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                googleMap.setMinZoomPreference(8);
+            }else {
+                Toast.makeText(getContext(), "User location not found !!", Toast.LENGTH_SHORT).show();
+                LatLng latLng = new LatLng(20.5937, 78.9629);
+                googleMap.addMarker(new MarkerOptions().position(latLng).title("India"));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            }
+
         }
     };
 
